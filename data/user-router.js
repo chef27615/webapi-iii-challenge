@@ -15,4 +15,8 @@ userRouter.get('/', async (req, res) => {
 
 
 
+userRouter.use((req, res, next) => {
+    res.status(404).json({ message: "Nice try, but no"})
+})
+
 module.exports = userRouter;
