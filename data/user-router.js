@@ -1,6 +1,6 @@
 const express = require('express');
 const Users = require('./helpers/userDb');
-
+const Posts = require('./helpers/postDb');
 const userRouter = express.Router();
 
 userRouter.get('/', async (req, res) => {
@@ -20,7 +20,7 @@ userRouter.get('/:id', async (req, res) => {
     }catch(err){res.status(500).json({errorMessage: err })}
 })
 
-userRouter.post('/', async (req, res) => {
+userRouter.post('/', upperName, async (req, res) => {
     try{
         const newUser = await Users.insert(req.body)
         const { id, name } =req.body;
@@ -35,7 +35,7 @@ userRouter.delete('/:id', async (req, res) => {
     }catch(err){res.status(500).json({errorMessage: err })}
 })
 
-userRouter.put('/:id', async (req, res) => {
+userRouter.put('/:id', upperName , async (req, res) => {
     try{
         const updatedUser = await Users.update(req.params.id, req.body);
         const { id, name } = req.body;
@@ -43,8 +43,26 @@ userRouter.put('/:id', async (req, res) => {
     }catch(err){res.status(500).json({errorMessage: err })}
 })
 
+userRouter.get('/:id/posts', async (req, res) => {
+    try{
+        const posts = await Posts.get();
+        const id = req.params.id
+        const postById = posts.filter((cv)=>{ return cv.user_id === id} )
+        res.status(200).json(postById)  
+        
+    }catch(err){res.status(500).json({errorMessage: err })}
+})
+
+
+
 userRouter.use((req, res, next) => {
     res.status(404).json({ message: "Nice try, but no"})
 })
+
+function upperName(req, res, next){
+        const newName = req.body.name.toUpperCase();
+        req.body.name = newName;
+        next()
+    }
 
 module.exports = userRouter;
