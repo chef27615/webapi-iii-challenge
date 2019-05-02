@@ -1,7 +1,10 @@
 // code away!
+require('dotenv').config();
 
 const server = require('./server');
 
-server.listen(4001, () => {
-    console.log('\n***server on 4001***\n');
+const port = process.env.PORT || 9000;
+
+server.listen(port, () => {
+    console.log(`\n***server on ${port}***\n`);
 })
