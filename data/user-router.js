@@ -45,11 +45,8 @@ userRouter.put('/:id', upperName , async (req, res) => {
 
 userRouter.get('/:id/posts', async (req, res) => {
     try{
-        const posts = await Posts.get();
-        const id = req.params.id
-        const postById = posts.filter((cv)=>{ return cv.user_id === id} )
-        res.status(200).json(postById)  
-        
+        const posts = await Users.getUserPosts(req.params.id);
+        posts ? res.status(200).json(posts) : res.status(404).json({ message: "no such thing"})
     }catch(err){res.status(500).json({errorMessage: err })}
 })
 
